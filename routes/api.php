@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +17,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::apiResource('posts', PostController::class);
+Route::apiResource('comments', CommentController::class)->only(['store']);
+
+Route::controller(AuthController::class)->prefix('auth')->name('auth.')->group(function() {
+    Route::post('login', 'store')->name('login');
 });
+
+Route::post('test', function() {
+    return response()->json(['message' => 'Test API Route is working']);
+});
+
+require_once __DIR__ . '/api/v1.php';

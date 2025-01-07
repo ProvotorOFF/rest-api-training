@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\User
@@ -55,7 +56,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
+        'role'
     ];
 
     /**
@@ -65,7 +66,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
+        'remember_token'
     ];
 
     /**
@@ -92,5 +93,9 @@ class User extends Authenticatable
     public function isUser(): bool
     {
         return $this->role === UserRole::User;
+    }
+
+    public function getCanViewDraftsAttribute() {
+        return in_array($this->role, [UserRole::Moderator, UserRole::Admin]);
     }
 }
